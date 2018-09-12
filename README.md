@@ -22,4 +22,12 @@ npm install
 npm start
 ```
 
-> http://127.0.0.1:8000/
+## Two servers
+
+* run express server
+
+    http://127.0.0.1:8000/
+
+* run hot reload server
+
+    http://127.0.0.1:3000/
