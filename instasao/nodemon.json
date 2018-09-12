@@ -1,0 +1,6 @@
+{
+    "events": {
+        "restart": "webpack --mode development"
+    },
+    "ignore":["public"]
+}
