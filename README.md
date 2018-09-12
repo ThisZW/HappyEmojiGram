@@ -26,8 +26,8 @@ npm start
 
 * run express server
 
-    http://127.0.0.1:8000/
+    <http://127.0.0.1:8000>
 
 * run hot reload server
 
-    http://127.0.0.1:3000/
+    <http://127.0.0.1:3000>
