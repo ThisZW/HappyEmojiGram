@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "npm-run-all --parallel watch:server watch:build",
-    "watch:build": "webpack-dev-server --hot --mode development",
+    "start": "npm-run-all --parallel watch:server watch:serverDev",
+    "prestart": "webpack --mode development",
+    "watch:serverDev": "webpack-dev-server --hot --mode development",
     "watch:server": "nodemon --exec babel-node  ./bin/www"
   },
   "dependencies": {
