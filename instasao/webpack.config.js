@@ -21,6 +21,10 @@ module.exports = {
 
             },
             {
+                test: /\.less$/,
+                loader: 'less-loader' // compiles Less to CSS
+            },
+            {
                 test: /\.(scss|css)$/,
                 use: [{
                         loader: 'style-loader'
@@ -60,5 +64,5 @@ module.exports = {
         hot: true,
         port: 3000,
         historyApiFallback: true
-      }
+    }
 };
