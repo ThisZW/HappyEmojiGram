@@ -3,7 +3,7 @@ const config = {
         port: 8000
     },
     mongodb:{
-        url: "mongodb://localhost:27017"
+        url: "mongodb://localhost:27017/instasao"
     }
 }
 exports.config = config;

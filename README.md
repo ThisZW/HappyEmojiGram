@@ -18,8 +18,6 @@ git clone https://github.com/ThisZW/Instasao.git
 cd Instasao/instasao
 npm install
 (cd client && npm install)
-
-npm start
 ```
 
 ## Two servers
@@ -31,3 +29,11 @@ npm start
 * run hot reload server
 
     <http://127.0.0.1:3000>
+
+    
+```bash
+# run both 
+npm test
+# run server only 
+npm start
+```
