@@ -1,9 +1,10 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
-var User = require('../models/User.js');
-var bcrypt = require('bcrypt');
-const saltRounds = 10;
+var passport = require('passport');
+var User = mongoose.model('User')
+require('../passport.config')(passport);
+var jwt = require('jsonwebtoken');
 
 router.post('/login', async function (req, res, next) {
     var authReceived = req.body;
@@ -17,21 +18,37 @@ router.post('/login', async function (req, res, next) {
         })
         return;
     }
-    const match = await bcrypt.compare(authReceived.password, user.password);
-    if (match) {
-        //TODO login
-        res.send({
-            status: 'ok'
-        })
-    } else {
-        res.send({
-            status: 'error'
-        })
-    }
+
+    // check if password matches
+    user.comparePassword(authReceived.password, function (err, isMatch) {
+        if (isMatch && !err) {
+            // if user is found and password is right create a token
+            var token = jwt.sign(user.toJSON(), config.session.secret, {
+                expiresIn: "7d"
+            });
+            // return the information including token as JSON
+            res.send({
+                status: 'ok',
+                token: 'JWT ' + token
+            });
+        } else {
+            res.send({
+                status: 'error'
+            })
+            return;
+        }
+    });
 });
 
 router.post('/register', async function (req, res, next) {
     var authReceived = req.body;
+    if (!authReceived.email || !authReceived.password || !authReceived.username || authReceived.email.length == 0 || authReceived.username.length == 0) {
+        res.send({
+            status: 'error',
+            msg: 'missing field.'
+        });
+        return;
+    }
     if (authReceived.password !== authReceived.password_confirm) {
         res.send({
             status: 'error',
@@ -62,23 +79,35 @@ router.post('/register', async function (req, res, next) {
         })
         return;
     }
-    try {
-        await User.create({
-            email: authReceived.email,
-            username: authReceived.username,
-            password: await bcrypt.hash(authReceived.password, saltRounds)
-        })
+
+    var newUser = new User({
+        email: authReceived.email,
+        username: authReceived.username,
+        password: authReceived.password
+    });
+    newUser.save(function (err) {
+        if (err) {
+            res.send({
+                status: 'error',
+                msg: "database error"
+            })
+            res.end()
+            return;
+        }
         res.send({
             status: 'ok'
         })
-    } catch (e) {
-        res.send({
-            status: 'error',
-            msg: "saving new user failed"
-        })
-        console.error(e)
-    }
+        res.end()
+    });
+});
 
+
+router.get('/whoami', passport.authenticate('jwt', {
+    session: false
+}), async function (req, res, next) {
+    res.send({
+        username: req.user.username
+    });
 });
 
 module.exports = router;
